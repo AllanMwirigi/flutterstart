@@ -3,18 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class WordPage extends StatelessWidget {
+  const WordPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => WordPageState(),
-      child: WordSection(),
-      // child: Scaffold(
-      //   appBar: AppBar(
-      //     backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      //     title: const Text('Word Gen'),
-      //   ),
-      //   body: WordSection(),
-      // ),
+      child: _WordSection(),
     );
   }
 }
@@ -34,7 +29,8 @@ class WordPageState extends ChangeNotifier {
   }
 }
 
-class WordSection extends StatelessWidget {
+class _WordSection extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     var wordPageState = context.watch<WordPageState>();
@@ -70,7 +66,28 @@ class WordSection extends StatelessWidget {
                 child: const Text("Next")
             ),
           ],
-        )
+        ),
+        wordPageState.favourites.isNotEmpty ? _FavouritesSection() : Container(),
+      ],
+    );
+  }
+}
+
+class _FavouritesSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var pageState = context.watch<WordPageState>();
+
+    return Column(
+      children: [
+        const SizedBox(height: 50,),
+        Text('Favorites:', style: Theme.of(context).textTheme.headlineMedium),
+        const SizedBox(height: 10,),
+        Wrap(
+          children: pageState.favourites.map((f) =>
+              Padding(padding: const EdgeInsets.all(10), child: Text(f.asPascalCase),)
+          ).toList(),
+        ),
       ],
     );
   }
